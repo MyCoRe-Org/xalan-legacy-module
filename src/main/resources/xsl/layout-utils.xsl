@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:acl="xalan://org.mycore.access.MCRAccessManager"
-  xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mcrxsl="xalan://org.mycore.common.xml.MCRXMLFunctions"
+  xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mcrxsl="xalan://org.mycore.common.xml.MCRXMLFunctions" xmlns:mcrurn="xalan://org.mycore.urn.MCRXMLFunctions"
   xmlns:i18n="xalan://org.mycore.services.i18n.MCRTranslation" xmlns:websiteWriteProtection="xalan://org.mycore.frontend.MCRWebsiteWriteProtection"
-  exclude-result-prefixes="acl i18n xlink mcrxsl websiteWriteProtection">
+  exclude-result-prefixes="acl i18n xlink mcrxsl mcrurn websiteWriteProtection">
   <xsl:param name="WebApplicationBaseURL" />
   <xsl:param name="ServletsBaseURL" />
   <xsl:param name="RequestURL" />
@@ -399,12 +399,12 @@
   <!-- * Derivate Link * -->
   <!-- ******************************************************** -->
   <xsl:template name="derivateLink">
-    <xsl:param name="staticURL" />
-
     <xsl:for-each select="derivateLink">
-      <xsl:variable select="substring-before(@xlink:href, '/')" name="deriv" />
+      <xsl:variable name="derivateId" select="substring-before(@xlink:href, '/')" />
+      <xsl:variable name="isDisplayedEnabled" select="mcrxsl:isDisplayedEnabledDerivate($derivateId)" />
+      <xsl:variable name="mayWriteDerivate" select="acl:checkPermission($derivateId,'writedb')" />
       <xsl:choose>
-        <xsl:when test="acl:checkPermissionForReadingDerivate($deriv)">
+        <xsl:when test="acl:checkDerivateDisplayPermission($derivateId) and $isDisplayedEnabled = 'true' or $mayWriteDerivate">
           <xsl:variable name="firstSupportedFile" select="concat('/', substring-after(@xlink:href, '/'))" />
           <table cellpadding="0" cellspacing="0" border="0" width="100%">
             <tr>
@@ -417,7 +417,7 @@
               <td valign="top" align="left">
                 <!-- MCR-IView ..start -->
                 <xsl:call-template name="derivateLinkView">
-                  <xsl:with-param name="derivateID" select="$deriv" />
+                  <xsl:with-param name="derivateID" select="$derivateId" />
                   <xsl:with-param name="file" select="$firstSupportedFile" />
                 </xsl:call-template>
                 <!-- MCR - IView ..end -->
