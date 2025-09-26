@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xalan="http://xml.apache.org/xalan" xmlns:mcrxsl="xalan://org.mycore.common.xml.MCRXMLFunctions"
-  xmlns:ex="http://exslt.org/dates-and-times" exclude-result-prefixes="mcrxsl xalan mods xlink ex">
+                xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xalan="http://xml.apache.org/xalan" xmlns:mcrxsl="xalan://org.mycore.common.xml.MCRXMLFunctions"
+                xmlns:ex="http://exslt.org/dates-and-times" exclude-result-prefixes="mcrxsl xalan mods xlink ex">
   <!-- should really be last stylesheet to be imported -->
   <xsl:import href="xslImport:solr-document:solr-basetemplate.xsl" />
   <xsl:template match="text()" />
@@ -110,6 +110,11 @@
     </xsl:for-each>
     <xsl:for-each select="service/servdates/servdate[@type='createdate']">
       <field name="created">
+        <xsl:value-of select="." />
+      </field>
+    </xsl:for-each>
+    <xsl:for-each select="service/servdates/servdate[@type='effectivemodifydate']">
+      <field name="effectiveModified">
         <xsl:value-of select="." />
       </field>
     </xsl:for-each>
