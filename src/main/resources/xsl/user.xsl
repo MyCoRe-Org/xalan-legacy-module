@@ -3,8 +3,8 @@
 <!-- XSL to display data of a login user -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xalan="http://xml.apache.org/xalan" xmlns:mcrxsl="xalan://org.mycore.common.xml.MCRXMLFunctions"
-  xmlns:acl="xalan://org.mycore.access.MCRAccessManager" xmlns:i18n="xalan://org.mycore.services.i18n.MCRTranslation"
-  exclude-result-prefixes="xsl xalan i18n acl mcrxsl"
+  xmlns:acl="xalan://org.mycore.access.MCRAccessManager" xmlns:i18n="xalan://org.mycore.services.i18n.MCRTranslation" xmlns:const="xalan://org.mycore.user2.MCRUser2Constants"
+  exclude-result-prefixes="xsl xalan i18n acl const mcrxsl"
 >
 
   <xsl:include href="MyCoReLayout.xsl" />
@@ -27,7 +27,7 @@
   <xsl:template match="user" mode="actions">
     <xsl:variable name="isCurrentUser" select="$CurrentUser = $uid" />
     <xsl:if test="(string-length($step) = 0) or ($step = 'changedPassword')">
-      <xsl:variable name="isUserAdmin" select="acl:checkPermission('administrate-users')" />
+      <xsl:variable name="isUserAdmin" select="acl:checkPermission(const:getUserAdminPermission())" />
       <xsl:choose>
         <xsl:when test="$isUserAdmin">
           <a class="btn btn-secondary" href="{$WebApplicationBaseURL}authorization/change-user.xed?action=save&amp;id={$uid}">
@@ -95,7 +95,7 @@
               </strong>
             </xsl:if>
           </p>
-          <form class="float-left" method="post" action="MCRUserServlet">
+          <form class="float-end" method="post" action="MCRUserServlet">
             <input name="action" value="delete" type="hidden" />
             <input name="id" value="{$uid}" type="hidden" />
             <input name="XSL.step" value="deleted" type="hidden" />
@@ -110,9 +110,7 @@
       </xsl:if>
       <xsl:if test="$step = 'deleted'">
         <div class="section alert alert-success alert-dismissable">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-            <xsl:text disable-output-escaping="yes">&amp;times;</xsl:text>
-          </button>
+          <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-hidden="true" />
           <p>
             <strong>
               <xsl:value-of select="i18n:translate('component.user2.admin.userDeleteConfirm')" />
@@ -122,9 +120,7 @@
       </xsl:if>
       <xsl:if test="$step = 'changedPassword'">
         <div class="section alert alert-success alert-dismissable">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-            <xsl:text disable-output-escaping="yes">&amp;times;</xsl:text>
-          </button>
+          <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-hidden="true" />
           <p>
             <strong>
               <xsl:value-of select="i18n:translate('component.user2.admin.passwordChangeConfirm')" />
