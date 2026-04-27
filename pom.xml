@@ -21,7 +21,7 @@
     <tag>HEAD</tag>
   </scm>
   <properties>
-    <java.target.version>21</java.target.version>
+    <java.target.version>25</java.target.version>
     <mycore.version>2026.06.0-SNAPSHOT</mycore.version>
   </properties>
   <build />
